@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SaaS Revenue & Funnel Analytics Dashboard – Sinchan Sinha</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1a2e4a;
+    --blue: #2563a8;
+    --accent: #c8923a;
+    --light: #f5f3ef;
+    --text: #2c2c2c;
+    --muted: #6b7280;
+    --border: #ddd8d0;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background: var(--light);
+    color: var(--text);
+    line-height: 1.75;
+  }
+
+  /* Header */
+  .site-header {
+    background: var(--navy);
+    padding: 14px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .site-header .name {
+    font-family: 'Playfair Display', serif;
+    color: #fff;
+    font-size: 1rem;
+    letter-spacing: 0.04em;
+  }
+  .site-header .tag {
+    color: #94afc8;
+    font-size: 0.78rem;
+    font-family: 'Source Serif 4', serif;
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 0%, #1e3d6b 60%, #2a5298 100%);
+    padding: 72px 48px 56px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 340px; height: 340px;
+    border-radius: 50%;
+    background: rgba(200,146,58,0.08);
+    pointer-events: none;
+  }
+  .hero-label {
+    display: inline-block;
+    background: rgba(200,146,58,0.18);
+    color: var(--accent);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    color: #fff;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    line-height: 1.25;
+    max-width: 680px;
+    margin-bottom: 20px;
+  }
+  .hero-meta {
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+  }
+  .hero-meta span {
+    color: #94afc8;
+    font-size: 0.82rem;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+  }
+  .hero-meta span strong { color: #c8d9ec; font-weight: 600; }
+
+  /* Layout */
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 32px 80px;
+  }
+
+  /* Section */
+  .section {
+    padding-top: 56px;
+  }
+  .section-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.7rem;
+    color: var(--accent);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: var(--navy);
+    margin-bottom: 24px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--border);
+  }
+  .section p {
+    font-size: 0.97rem;
+    margin-bottom: 16px;
+    color: var(--text);
+    font-weight: 300;
+  }
+
+  /* Pull quote */
+  .pull-quote {
+    border-left: 3px solid var(--accent);
+    margin: 28px 0;
+    padding: 16px 24px;
+    background: #fff;
+    border-radius: 0 4px 4px 0;
+  }
+  .pull-quote p {
+    font-style: italic;
+    color: var(--navy);
+    font-size: 0.95rem;
+    margin: 0;
+    font-weight: 300;
+  }
+
+  /* Questions list */
+  .questions {
+    list-style: none;
+    margin: 16px 0 24px;
+    padding: 0;
+  }
+  .questions li {
+    padding: 10px 0 10px 28px;
+    position: relative;
+    font-size: 0.95rem;
+    font-weight: 300;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+  .questions li:last-child { border-bottom: none; }
+  .questions li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-style: normal;
+  }
+
+  /* Tool pills */
+  .tool-mention {
+    display: inline-block;
+    background: #e8f0f8;
+    color: var(--blue);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 3px;
+    margin: 0 2px;
+    font-family: 'Source Serif 4', serif;
+    letter-spacing: 0.02em;
+  }
+
+  /* Results grid */
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin: 28px 0;
+  }
+  .result-card {
+    background: var(--navy);
+    padding: 24px 20px;
+    border-radius: 4px;
+    text-align: center;
+  }
+  .result-card .metric {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .result-card .label {
+    color: #94afc8;
+    font-size: 0.78rem;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+  }
+
+  /* Snapshot table */
+  .snapshot {
+    margin-top: 28px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .snapshot-row {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    border-bottom: 1px solid var(--border);
+  }
+  .snapshot-row:last-child { border-bottom: none; }
+  .snap-label {
+    background: #edf2f8;
+    padding: 14px 18px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--navy);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .snap-value {
+    padding: 14px 18px;
+    font-size: 0.85rem;
+    font-weight: 300;
+    color: var(--text);
+    background: #fff;
+  }
+
+  /* Footer */
+  .footer {
+    background: var(--navy);
+    padding: 24px 48px;
+    text-align: center;
+    color: #94afc8;
+    font-size: 0.78rem;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+  }
+
+  @media (max-width: 600px) {
+    .site-header, .hero { padding-left: 20px; padding-right: 20px; }
+    .container { padding: 0 20px 60px; }
+    .snapshot-row { grid-template-columns: 1fr; }
+    .snap-label { border-bottom: 1px solid var(--border); }
+    .hero-meta { gap: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <span class="name">Sinchan Sinha</span>
+  <span class="tag">Project Case Study</span>
+</header>
+
+<div class="hero">
+  <div class="hero-label">Project 01 · Revenue Operations</div>
+  <h1>SaaS Revenue &amp; Funnel Analytics Dashboard</h1>
+  <div class="hero-meta">
+    <span><strong>Period:</strong> March – April 2025</span>
+    <span><strong>Domain:</strong> GTM Analytics · Revenue Operations</span>
+    <span><strong>Tools:</strong> SQL · Power BI · DAX</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="section">
+    <div class="section-number">Section 01</div>
+    <h2>Business Problem</h2>
+    <p>For any SaaS company, the pipeline is the lifeblood of the business. But knowing your pipeline exists and actually understanding what is happening inside it are two very different things.</p>
+    <p>This project was born out of a challenge that GTM and Revenue Operations teams face constantly: leadership could see top-line numbers in their CRM, but they had no visibility into <em>why</em> deals were converting — or more importantly, why they were not. The marketing team was generating leads, the sales team was working those leads, but nobody had a single, clean view that tied these pieces together.</p>
+    <div class="pull-quote">
+      <p>"Without a centralized performance view, resource planning relied on gut feel rather than evidence. Marketing budgets were hard to justify, and sales leaders lacked the data to identify where the real bottlenecks lived."</p>
+    </div>
+    <p>Key questions the business needed to answer:</p>
+    <ul class="questions">
+      <li>Which lead sources were producing the highest-quality pipeline?</li>
+      <li>Where in the funnel were deals stalling or dropping off?</li>
+      <li>Was the team on track to hit quarterly revenue targets?</li>
+      <li>Which customer segments represented the strongest lifetime value?</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-number">Section 02</div>
+    <h2>Solution Approach</h2>
+    <p>The approach started with the data itself. Raw deal and lead data was extracted and cleaned using <span class="tool-mention">SQL</span> — a querying language used to organize and manipulate data stored in databases. The dataset contained inconsistencies common to CRM exports: duplicate records, missing close dates, inconsistent lead source labels, and pipeline stages that didn't always match the actual sales process. These were resolved before any analysis began.</p>
+    <p>Once clean, SQL queries were written to calculate conversion rates at each funnel stage — from initial lead capture, through qualified opportunities, to closed-won deals. This stage-by-stage view made it possible to pinpoint exactly where leads were getting stuck in the pipeline.</p>
+    <p>Revenue forecasting models were layered on top. By analyzing historical deal velocity — how long deals typically spent at each stage — and combining that with the current open pipeline value, the dashboard could project likely revenue outcomes for the quarter. This gave leadership a data-backed forecast, not just a number a sales rep submitted manually.</p>
+    <p>Customer segmentation was incorporated to add strategic depth. Customers were grouped by industry, deal size, and acquisition channel — revealing which segments converted fastest, generated the highest average contract value, and showed the strongest retention signals.</p>
+    <p>All of this was brought to life in <span class="tool-mention">Power BI</span>, using <span class="tool-mention">DAX</span> measures for dynamic calculations. The dashboard was designed for two audiences: executives who needed a high-level pipeline health summary, and analysts who needed drill-down capability into specific segments or time periods.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-number">Section 03</div>
+    <h2>Results &amp; Business Impact</h2>
+    <p>The completed dashboard delivered a single source of truth for GTM performance — something that had not existed before. Where leadership previously pieced together insights from multiple disconnected reports, they could now access a real-time view of the entire revenue engine in one place.</p>
+
+    <div class="results-grid">
+      <div class="result-card">
+        <div class="metric">1</div>
+        <div class="label">Unified source of truth for pipeline & revenue</div>
+      </div>
+      <div class="result-card">
+        <div class="metric">↑</div>
+        <div class="label">Forecast accuracy via model-driven projections</div>
+      </div>
+      <div class="result-card">
+        <div class="metric">↓</div>
+        <div class="label">Reporting prep time for quarterly reviews</div>
+      </div>
+    </div>
+
+    <p>The funnel visibility made it immediately clear which stages were underperforming. Rather than reviewing generic win/loss ratios, the team could see the precise points where deal momentum broke down — enabling targeted coaching and smarter resource allocation.</p>
+    <p>The segmentation analysis added strategic value beyond reporting. By identifying which customer profiles generated the best outcomes, the business had a clearer basis for refining its ideal customer profile and realigning marketing investment accordingly.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-number">Section 04</div>
+    <h2>Technical Snapshot</h2>
+    <div class="snapshot">
+      <div class="snapshot-row">
+        <div class="snap-label">Tools Used</div>
+        <div class="snap-value">SQL, Power BI, DAX (Data Analysis Expressions), Excel</div>
+      </div>
+      <div class="snapshot-row">
+        <div class="snap-label">Methodologies</div>
+        <div class="snap-value">Funnel analysis, revenue forecasting, customer segmentation, pipeline health modeling</div>
+      </div>
+      <div class="snapshot-row">
+        <div class="snap-label">Data Sources</div>
+        <div class="snap-value">Simulated CRM pipeline data (leads, opportunities, closed-won deals)</div>
+      </div>
+      <div class="snapshot-row">
+        <div class="snap-label">KPIs Tracked</div>
+        <div class="snap-value">Conversion rate by stage, average deal velocity, pipeline coverage ratio, forecasted vs. target revenue, CAC by segment, ACV by segment</div>
+      </div>
+      <div class="snapshot-row">
+        <div class="snap-label">Deliverables</div>
+        <div class="snap-value">Interactive Power BI dashboard with executive summary view and analyst drill-down layer</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="footer">
+  Sinchan Sinha · Marketing Data Analyst · sinchansinha01@gmail.com
+</footer>
+
+</body>
+</html>

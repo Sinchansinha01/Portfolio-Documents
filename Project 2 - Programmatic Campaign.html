@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programmatic Display Campaign Optimization – Sinchan Sinha</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1a2e4a;
+    --blue: #2563a8;
+    --accent: #2d8a6e;
+    --light: #f2f5f3;
+    --text: #2c2c2c;
+    --muted: #6b7280;
+    --border: #d4dbd7;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background: var(--light);
+    color: var(--text);
+    line-height: 1.75;
+  }
+  .site-header {
+    background: #0f2318;
+    padding: 14px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .site-header .name { font-family: 'Playfair Display', serif; color: #fff; font-size: 1rem; letter-spacing: 0.04em; }
+  .site-header .tag { color: #7aab93; font-size: 0.78rem; font-family: 'Source Serif 4', serif; font-weight: 300; letter-spacing: 0.08em; text-transform: uppercase; }
+
+  .hero {
+    background: linear-gradient(135deg, #0f2318 0%, #1a3d28 55%, #1e5235 100%);
+    padding: 72px 48px 56px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    bottom: -80px; right: -80px;
+    width: 380px; height: 380px;
+    border-radius: 50%;
+    background: rgba(45,138,110,0.1);
+    pointer-events: none;
+  }
+  .hero-label {
+    display: inline-block;
+    background: rgba(45,138,110,0.2);
+    color: #5ecfae;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    color: #fff;
+    font-size: clamp(1.8rem, 3.5vw, 2.7rem);
+    line-height: 1.25;
+    max-width: 680px;
+    margin-bottom: 20px;
+  }
+  .hero-meta { display: flex; gap: 28px; flex-wrap: wrap; }
+  .hero-meta span { color: #7aab93; font-size: 0.82rem; font-weight: 300; letter-spacing: 0.05em; }
+  .hero-meta span strong { color: #b2d4c5; font-weight: 600; }
+
+  .container { max-width: 860px; margin: 0 auto; padding: 0 32px 80px; }
+
+  .section { padding-top: 56px; }
+  .section-number { font-family: 'Playfair Display', serif; font-size: 0.7rem; color: var(--accent); letter-spacing: 0.18em; text-transform: uppercase; font-weight: 600; margin-bottom: 6px; }
+  .section h2 { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--navy); margin-bottom: 24px; padding-bottom: 14px; border-bottom: 2px solid var(--border); }
+  .section p { font-size: 0.97rem; margin-bottom: 16px; color: var(--text); font-weight: 300; }
+
+  .pull-quote { border-left: 3px solid var(--accent); margin: 28px 0; padding: 16px 24px; background: #fff; border-radius: 0 4px 4px 0; }
+  .pull-quote p { font-style: italic; color: var(--navy); font-size: 0.95rem; margin: 0; font-weight: 300; }
+
+  .questions { list-style: none; margin: 16px 0 24px; padding: 0; }
+  .questions li { padding: 10px 0 10px 28px; position: relative; font-size: 0.95rem; font-weight: 300; border-bottom: 1px solid var(--border); color: var(--text); }
+  .questions li:last-child { border-bottom: none; }
+  .questions li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-style: normal; }
+
+  .tool-mention { display: inline-block; background: #e0f0eb; color: #1a5c47; font-size: 0.78rem; font-weight: 600; padding: 2px 10px; border-radius: 3px; margin: 0 2px; font-family: 'Source Serif 4', serif; letter-spacing: 0.02em; }
+
+  .results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin: 28px 0; }
+  .result-card { background: #0f2318; padding: 24px 20px; border-radius: 4px; text-align: center; }
+  .result-card .metric { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: #5ecfae; line-height: 1; margin-bottom: 8px; }
+  .result-card .label { color: #7aab93; font-size: 0.78rem; font-weight: 300; letter-spacing: 0.05em; }
+
+  .snapshot { margin-top: 28px; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+  .snapshot-row { display: grid; grid-template-columns: 180px 1fr; border-bottom: 1px solid var(--border); }
+  .snapshot-row:last-child { border-bottom: none; }
+  .snap-label { background: #e4ede8; padding: 14px 18px; font-size: 0.78rem; font-weight: 600; color: #0f2318; letter-spacing: 0.04em; text-transform: uppercase; }
+  .snap-value { padding: 14px 18px; font-size: 0.85rem; font-weight: 300; color: var(--text); background: #fff; }
+
+  .footer { background: #0f2318; padding: 24px 48px; text-align: center; color: #7aab93; font-size: 0.78rem; font-weight: 300; letter-spacing: 0.05em; }
+
+  @media (max-width: 600px) {
+    .site-header, .hero { padding-left: 20px; padding-right: 20px; }
+    .container { padding: 0 20px 60px; }
+    .snapshot-row { grid-template-columns: 1fr; }
+    .snap-label { border-bottom: 1px solid var(--border); }
+    .hero-meta { gap: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <span class="name">Sinchan Sinha</span>
+  <span class="tag">Project Case Study</span>
+</header>
+
+<div class="hero">
+  <div class="hero-label">Project 02 · Performance Marketing</div>
+  <h1>Programmatic Display Campaign Optimization Analysis</h1>
+  <div class="hero-meta">
+    <span><strong>Period:</strong> February – March 2025</span>
+    <span><strong>Domain:</strong> Paid Channel Analytics · Attribution</span>
+    <span><strong>Tools:</strong> Excel · Google Display Network</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="section">
+    <div class="section-number">Section 01</div>
+    <h2>Business Problem</h2>
+    <p>Digital advertising is expensive, and the margin for inefficiency is thin. For marketing teams running programmatic display campaigns, the challenge is not just spending the budget — it is spending it well.</p>
+    <p>Without proper analysis, campaign teams are flying blind. They know their ads are running, but they cannot clearly explain which targeting decisions are driving results, which placements are wasting money, and what adjustments would actually move the needle on key metrics.</p>
+    <div class="pull-quote">
+      <p>"Without a structured analytical process, answers were either unavailable or buried in raw data exports that required hours of manual work to interpret — resulting in slow optimization cycles and delayed decisions."</p>
+    </div>
+    <p>The core business questions driving this project:</p>
+    <ul class="questions">
+      <li>Is the current cost-per-acquisition (CPA) acceptable, and where is it highest?</li>
+      <li>Which targeting parameters and audience segments are generating the best click-through rates?</li>
+      <li>How should the budget be reallocated to maximize performance across placements?</li>
+      <li>How do daily performance trends shift, and what does that mean for optimization timing?</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-number">Section 02</div>
+    <h2>Solution Approach</h2>
+    <p>A simulated Google Display Network campaign was constructed with realistic performance data — daily impressions, clicks, conversions, spend, and audience-level breakdowns. This environment allowed the full analytical process to be developed and validated against data that mirrors real-world campaign complexity.</p>
+    <p>The analysis centered on three core metrics tracked daily: <span class="tool-mention">CTR</span> (click-through rate — how engaging the ad and targeting are), <span class="tool-mention">CPM</span> (cost per thousand impressions — how efficiently budget is deployed for reach), and <span class="tool-mention">CPA</span> (cost per acquisition — the most critical metric for campaign efficiency). Daily tracking made it possible to catch performance shifts early before inefficiencies compounded.</p>
+    <p>Trend analysis was applied to identify patterns across time — not just average performance, but when performance peaked, when it dipped, and what campaign variables correlated with those movements. This temporal analysis is what separates reactive management from proactive optimization.</p>
+    <p>Attribution-style analysis was layered on top: evaluating which targeting parameters, audience segments, and placement types were most consistently associated with conversion outcomes — providing the data basis for confident budget reallocation decisions.</p>
+    <p>The entire workflow was housed in a dynamic <span class="tool-mention">Excel</span> dashboard with pivot tables, conditional formatting, and dynamic charting — designed to update automatically as new performance data was entered, eliminating manual chart rebuilds after each reporting cycle.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-number">Section 03</div>
+    <h2>Results &amp; Business Impact</h2>
+
+    <div class="results-grid">
+      <div class="result-card">
+        <div class="metric">+20%</div>
+        <div class="label">Simulated CTR improvement via targeting optimization</div>
+      </div>
+      <div class="result-card">
+        <div class="metric">−18%</div>
+        <div class="label">CPA reduction through budget reallocation</div>
+      </div>
+      <div class="result-card">
+        <div class="metric">↓hrs</div>
+        <div class="label">Manual reporting time eliminated by dynamic dashboard</div>
+      </div>
+    </div>
+
+    <p>A 20% improvement in CTR through targeted optimization of audience parameters and creative-placement matching is significant in programmatic advertising — even incremental CTR improvements translate directly into better quality scores, lower costs, and stronger overall campaign economics.</p>
+    <p>The 18% CPA reduction came from budget reallocation away from underperforming segments toward placements with stronger conversion signals. In a live campaign context, this directly reduces the cost of acquiring each customer — compounding in value as scale increases.</p>
+    <p>The dynamic dashboard eliminated the manual reporting burden that typically consumes hours of a media analyst's week, freeing capacity for strategic optimization rather than data preparation. The methodology is directly transferable to live campaigns across any programmatic platform.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-number">Section 04</div>
+    <h2>Technical Snapshot</h2>
+    <div class="snapshot">
+      <div class="snapshot-row">
+        <div class="snap-label">Tools Used</div>
+        <div class="snap-value">Microsoft Excel (Pivot Tables, Dynamic Charts, Conditional Formatting)</div>
+      </div>
+      <div class="snapshot-row">
+        <div class="snap-label">Methodologies</div>
+        <div class="snap-value">Daily KPI tracking, trend analysis, attribution-style analysis, budget reallocation modeling</div>
+      </div>
+      <div class="snapshot-row">
+        <div class="snap-label">Data Sources</div>
+        <div class="snap-value">Simulated Google Display Network campaign data (impressions, clicks, conversions, spend, audience segments)</div>
+      </div>
+      <div class="snapshot-row">
+        <div class="snap-label">KPIs Tracked</div>
+        <div class="snap-value">CTR, CPM, CPA, conversion volume by targeting segment, spend efficiency by placement</div>
+      </div>
+      <div class="snapshot-row">
+        <div class="snap-label">Deliverables</div>
+        <div class="snap-value">Dynamic Excel performance dashboard with daily trend tracking and optimization recommendation layer</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="footer">
+  Sinchan Sinha · Marketing Data Analyst · sinchansinha01@gmail.com
+</footer>
+
+</body>
+</html>

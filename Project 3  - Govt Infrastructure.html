@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Government Infrastructure Analytics Dashboard – Sinchan Sinha</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1a2e4a;
+    --blue: #2563a8;
+    --accent: #7c4db8;
+    --light: #f4f2f8;
+    --text: #2c2c2c;
+    --muted: #6b7280;
+    --border: #d8d2e4;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background: var(--light);
+    color: var(--text);
+    line-height: 1.75;
+  }
+  .site-header {
+    background: #1a0f2e;
+    padding: 14px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .site-header .name { font-family: 'Playfair Display', serif; color: #fff; font-size: 1rem; letter-spacing: 0.04em; }
+  .site-header .tag { color: #a993c8; font-size: 0.78rem; font-family: 'Source Serif 4', serif; font-weight: 300; letter-spacing: 0.08em; text-transform: uppercase; }
+
+  .hero {
+    background: linear-gradient(135deg, #1a0f2e 0%, #2e1a52 55%, #3d2070 100%);
+    padding: 72px 48px 56px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -40px; left: -40px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: rgba(124,77,184,0.1);
+    pointer-events: none;
+  }
+  .hero-label {
+    display: inline-block;
+    background: rgba(124,77,184,0.2);
+    color: #c49ef0;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    color: #fff;
+    font-size: clamp(1.8rem, 3.5vw, 2.7rem);
+    line-height: 1.25;
+    max-width: 680px;
+    margin-bottom: 20px;
+  }
+  .hero-meta { display: flex; gap: 28px; flex-wrap: wrap; }
+  .hero-meta span { color: #a993c8; font-size: 0.82rem; font-weight: 300; letter-spacing: 0.05em; }
+  .hero-meta span strong { color: #cfc0e4; font-weight: 600; }
+
+  .container { max-width: 860px; margin: 0 auto; padding: 0 32px 80px; }
+
+  .section { padding-top: 56px; }
+  .section-number { font-family: 'Playfair Display', serif; font-size: 0.7rem; color: var(--accent); letter-spacing: 0.18em; text-transform: uppercase; font-weight: 600; margin-bottom: 6px; }
+  .section h2 { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--navy); margin-bottom: 24px; padding-bottom: 14px; border-bottom: 2px solid var(--border); }
+  .section p { font-size: 0.97rem; margin-bottom: 16px; color: var(--text); font-weight: 300; }
+
+  .pull-quote { border-left: 3px solid var(--accent); margin: 28px 0; padding: 16px 24px; background: #fff; border-radius: 0 4px 4px 0; }
+  .pull-quote p { font-style: italic; color: var(--navy); font-size: 0.95rem; margin: 0; font-weight: 300; }
+
+  .questions { list-style: none; margin: 16px 0 24px; padding: 0; }
+  .questions li { padding: 10px 0 10px 28px; position: relative; font-size: 0.95rem; font-weight: 300; border-bottom: 1px solid var(--border); color: var(--text); }
+  .questions li:last-child { border-bottom: none; }
+  .questions li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-style: normal; }
+
+  .tool-mention { display: inline-block; background: #ede8f8; color: #5a2d9e; font-size: 0.78rem; font-weight: 600; padding: 2px 10px; border-radius: 3px; margin: 0 2px; font-family: 'Source Serif 4', serif; letter-spacing: 0.02em; }
+
+  .results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin: 28px 0; }
+  .result-card { background: #1a0f2e; padding: 24px 20px; border-radius: 4px; text-align: center; }
+  .result-card .metric { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: #c49ef0; line-height: 1; margin-bottom: 8px; }
+  .result-card .label { color: #a993c8; font-size: 0.78rem; font-weight: 300; letter-spacing: 0.05em; }
+
+  .snapshot { margin-top: 28px; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+  .snapshot-row { display: grid; grid-template-columns: 180px 1fr; border-bottom: 1px solid var(--border); }
+  .snapshot-row:last-child { border-bottom: none; }
+  .snap-label { background: #ece8f4; padding: 14px 18px; font-size: 0.78rem; font-weight: 600; color: #1a0f2e; letter-spacing: 0.04em; text-transform: uppercase; }
+  .snap-value { padding: 14px 18px; font-size: 0.85rem; font-weight: 300; color: var(--text); background: #fff; }
+
+  .footer { background: #1a0f2e; padding: 24px 48px; text-align: center; color: #a993c8; font-size: 0.78rem; font-weight: 300; letter-spacing: 0.05em; }
+
+  @media (max-width: 600px) {
+    .site-header, .hero { padding-left: 20px; padding-right: 20px; }
+    .container { padding: 0 20px 60px; }
+    .snapshot-row { grid-template-columns: 1fr; }
+    .snap-label { border-bottom: 1px solid var(--border); }
+    .hero-meta { gap: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <span class="name">Sinchan Sinha</span>
+  <span class="tag">Project Case Study</span>
+</header>
+
+<div class="hero">
+  <div class="hero-label">Project 03 · Public Sector Analytics</div>
+  <h1>Government Infrastructure Analytics Dashboard</h1>
+  <div class="hero-meta">
+    <span><strong>Period:</strong> January – April 2025</span>
+    <span><strong>Domain:</strong> Public Sector · Self-Service BI</span>
+    <span><strong>Tools:</strong> SQL · Power BI · Power Query · DAX</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="section">
+    <div class="section-number">Section 01</div>
+    <h2>Business Problem</h2>
+    <p>Government infrastructure spending is large, complex, and highly scrutinized. Taxpayers, elected officials, and oversight bodies all expect accountability — not just that funds were spent, but that they were spent effectively, on time, and in alignment with stated priorities.</p>
+    <p>The challenge this project addressed is one that affects public sector organizations broadly: data exists, but it is fragmented. Funding allocation records sit in one system, project timelines in another, and performance metrics in spreadsheets managed by individual teams. When leadership needs to understand how investments are tracking — or when stakeholders request a status update — someone has to spend days manually pulling, cleaning, and assembling information from multiple sources.</p>
+    <div class="pull-quote">
+      <p>"The absence of a reliable, centralized reporting solution created operational drag, slowed decision-making, and made it difficult to demonstrate accountability to external stakeholders managing large capital programs."</p>
+    </div>
+    <p>The core business questions this project set out to answer:</p>
+    <ul class="questions">
+      <li>How are approved infrastructure funds being allocated across project categories and regions?</li>
+      <li>Which projects are on schedule, which are delayed, and what is the magnitude of those delays?</li>
+      <li>Are performance metrics aligning with commitments made to stakeholders and oversight bodies?</li>
+      <li>Can leadership access this information without requesting a custom report every time?</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-number">Section 02</div>
+    <h2>Solution Approach</h2>
+    <p>The project began with data consolidation. Infrastructure data covering funding allocations, project milestones, timeline tracking, and performance outcomes was brought together and cleaned using <span class="tool-mention">SQL</span>. Government datasets carry particular data quality challenges — inconsistent naming conventions, incomplete milestone records, funding categories that don't map cleanly across fiscal years. SQL was used to standardize these inconsistencies, creating a reliable base dataset before any visualization work began.</p>
+    <p>A key design principle throughout was scalability. Rather than building a dashboard that served one team's current needs and required manual updates as data changed, the solution was architected as a self-service model — meaning as new project data is added to the underlying sources, the dashboard updates automatically. For government operations where project portfolios span years, this transforms the dashboard from a static snapshot into a living operational tool.</p>
+    <p>The <span class="tool-mention">Power BI</span> dashboard was structured around three analytical layers. First: a funding allocation view showing how approved budgets were distributed across project types, regions, and program categories. Second: a project timeline tracker visualizing scheduled versus actual delivery dates — making delays visible at a glance and flagging which projects required escalation. Third: a performance metrics layer tracking KPIs that reflected whether projects were delivering on their stated outcomes, not just financial commitments.</p>
+    <p>Stakeholder transparency was a primary design goal. The visual language — color coding for on-track versus delayed projects, summary indicators at portfolio level, drill-down capability for individual project details — was designed to make information accessible to non-technical reviewers including elected officials, department heads, and external auditors.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-number">Section 03</div>
+    <h2>Results &amp; Business Impact</h2>
+
+    <div class="results-grid">
+      <div class="result-card">
+        <div class="metric">1</div>
+        <div class="label">Centralized view replacing fragmented multi-source reporting</div>
+      </div>
+      <div class="result-card">
+        <div class="metric">↓days</div>
+        <div class="label">Reporting prep time from days to minutes</div>
+      </div>
+      <div class="result-card">
+        <div class="metric">↑</div>
+        <div class="label">Stakeholder accountability and transparency</div>
+      </div>
+    </div>
+
+    <p>The self-service architecture was the most operationally significant outcome. Reporting that previously required days of data preparation could now be accessed in minutes. For a government team managing multiple concurrent projects with ongoing stakeholder obligations, this represented a substantial reduction in administrative burden — freeing analyst capacity for higher-value work rather than data assembly.</p>
+    <p>Timeline visibility created a new accountability mechanism. When delays became visible in the dashboard — rather than surfacing only when someone escalated — leadership could intervene earlier. Early intervention on infrastructure projects typically reduces the cost and complexity of recovery.</p>
+    <p>The transparency framework strengthened the team's ability to communicate with external stakeholders. Performance reviews, funding justifications, and oversight reporting became more evidence-based — grounded in consistent, verifiable data rather than manually compiled status updates.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-number">Section 04</div>
+    <h2>Technical Snapshot</h2>
+    <div class="snapshot">
+      <div class="snapshot-row">
+        <div class="snap-label">Tools Used</div>
+        <div class="snap-value">SQL, Power BI, Power Query, DAX</div>
+      </div>
+      <div class="snapshot-row">
+        <div class="snap-label">Methodologies</div>
+        <div class="snap-value">Data cleaning and normalization, self-service reporting architecture, KPI framework design, timeline variance analysis</div>
+      </div>
+      <div class="snapshot-row">
+        <div class="snap-label">Data Sources</div>
+        <div class="snap-value">Government infrastructure project datasets (funding allocations, project milestones, timeline tracking, performance outcomes)</div>
+      </div>
+      <div class="snapshot-row">
+        <div class="snap-label">KPIs Tracked</div>
+        <div class="snap-value">Budget allocation by category and region, planned vs. actual completion dates, timeline variance, performance metric attainment, project status distribution</div>
+      </div>
+      <div class="snapshot-row">
+        <div class="snap-label">Deliverables</div>
+        <div class="snap-value">Self-service Power BI dashboard with funding allocation, timeline tracking, and performance layers; scalable data model for ongoing reporting</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="footer">
+  Sinchan Sinha · Marketing Data Analyst · sinchansinha01@gmail.com
+</footer>
+
+</body>
+</html>
